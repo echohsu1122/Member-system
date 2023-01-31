@@ -31,14 +31,51 @@ app.use (express.urlencoded({extended:true}));
 app.get("/",function(req,res){
     res.render("index.ejs");
 });
-app.get("/member",function(req,res){
-    res.render("member.ejs");
+app.get("/member",async function(req,res){
+    if(!req.session.member){
+        res.redirect("/");
+        return;
+    }
+    const name = req.session.member.name;
+    
+    const collection = db.collection("member");
+    let result = await collection.find({});
+    let data = [];
+    await result.forEach(function(member){
+        data.push(member);
+    })
+    res.render("member.ejs",{name:name,data:data});
 });
 app.get("/error",function(req,res){
     const msg = req.query.msg;
     //動態帶入錯誤訊息
-    res.render("error.ejs",{msg})
+    res.render("error.ejs",{msg:msg})
 });
+//登出
+app.get("/signout", function(req,res){
+    req.session.member=null;
+    res.redirect("/");
+
+})
+//登入路由
+app.post("/signin", async function(req,res){
+    const email = req.body.email;
+    const password = req.body.password;
+    const collection = db.collection("member");
+    let result = await collection.findOne({
+        $and:[
+            {email:email,password:password}
+        ]
+    });
+    if(result=== null){
+        res.redirect("/error?msg=登入失敗，郵件密碼輸入錯誤");
+        return;
+    }
+    req.session.member =result
+    res.redirect("/member");
+
+});
+
 //註冊路由
 app.post("/signup", async function(req,res){
     const name =req.body.name;
@@ -50,6 +87,7 @@ app.post("/signup", async function(req,res){
     });
     if(result!== null){
         res.redirect("/error?msg=註冊失敗");
+        return;
     }
     result = await collection.insertOne({
         name:name,email:email,password:password
@@ -57,6 +95,8 @@ app.post("/signup", async function(req,res){
     res.redirect("/");
 
 });
+
+
 
 
 //http://localhost:3000/

@@ -7,7 +7,16 @@
     <title>會員</title>
 </head>
 <body>
+<h3>Hello, <%= name%></h3>
 <h3>恭喜進入會員介面</h3>
-    
+<div class="div">
+    <a href="/signout">登出</a> 
+</div>
+<!-- 樣板引擎中顯示陣列 -->
+<h3>所有會員</h3>
+<% for(let i=0;i<data.length;i++){ %>
+    <div><%= data[i].name%></div>
+<%}%>
+
 </body>
 </html>
