@@ -1,22 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>會員</title>
+    <style>
+        .box,
+        h3 {
+            width: 400px;
+            margin: 10px 20px;
+
+        }
+
+        .center {
+            border-bottom: 2px solid gray;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .bottomright {
+            text-align: right;
+            font-size: 12px;
+        }
+
+        .button {
+            background-color: gray;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-<h3>Hello, <%= name%></h3>
-<h3>恭喜進入會員介面</h3>
-<div class="div">
-    <a href="/signout">登出</a> 
-</div>
-<!-- 樣板引擎中顯示陣列 -->
-<h3>所有會員</h3>
-<% for(let i=0;i<data.length;i++){ %>
-    <div><%= data[i].name%></div>
-<%}%>
+    <h3>Hello, <%= name%>
+    </h3>
+    <h3>恭喜進入會員介面</h3>
+
+    <form action="/w" method="POST">
+        <div class="box"> 暱稱 : <%= name%>
+        </div>
+        <div class="box"> 訊息<textarea type="text" name="message" row="10" cols="50"></textarea><br /></div>
+        <div class="box" style="text-align: right;"><button class="button">輸入</button></div>
+    </form>
+    <h3>留言板</h3>
+    <div class="box" style="background-color: whitesmoke;">
+        <% for(let i=data_mes.length-1;i>=0;i--){ %>
+            <div class="center">
+                <%= data_mes[i].message %>
+                    <div class="bottomright">
+                        <%= data_mes[i].name %>
+                            <%= data_mes[i].date %>
+                    </div>
+            </div>
+
+            <%}%>
+    </div>
+    <!-- 樣板引擎中顯示陣列 -->
+    <h3>所有會員</h3>
+    <div class="box">
+        <% for(let i=0;i<data_name.length;i++){ %>
+            <div>
+                <%= data_name[i].name%>
+            </div>
+            <%} %>
+    </div>
+    <div class="box" style="text-align: right;">
+        <a href="/signout" class="button">登出</a>
+    </div>
 
 </body>
+
 </html>
